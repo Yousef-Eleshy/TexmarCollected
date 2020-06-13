@@ -71,7 +71,7 @@ class delivery_fun (models.Model):
             'location_id': self.mapped ('location_id').id,
             'location_dest_id': self.mapped ('location_dest_id').id,
             'customer_order_delivery': self.env['sale.order'].search (
-                ['|', ('name', '=', self.origin), ('client_order_ref', '!=', False)], limit=1).customer_order
+                ['|', ('name', '=', self.origin), ('client_order_ref', '!=', False)], limit=1)[0].customer_order
         }
 
 
