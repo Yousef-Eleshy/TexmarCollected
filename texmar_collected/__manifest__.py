@@ -3,15 +3,14 @@
     'name': "texmar_collected",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+         Includes: Size of Pieces - Customer Order - Purchase Order Cancel""",
 
     'description': """
-        Long description of module's purpose
+         Includes: Size of Pieces - Customer Order - Purchase Order Cancel
     """,
 
-    'author': "My Company",
-    'website': "http://www.yourcompany.com",
+    'author': "EgyMentors",
+    'website': "http://www.egymentors.com",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/13.0/odoo/addons/base/data/ir_module_category_data.xml
@@ -20,7 +19,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'mrp', 'sale_management', 'stock', 'sale', 'product'],
+    'depends': ['base', 'mrp', 'sale_management', 'stock', 'sale', 'product', 'purchase'],
 
     # always loaded
     'data': [
