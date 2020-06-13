@@ -61,7 +61,7 @@ class delivery_fun (models.Model):
         origin = len (origins) == 1 and origins.pop () or False
         partners = self.mapped ('partner_id')
         partner = len (partners) == 1 and partners.id or False
-        customer_order: self.env['sale.order'].search (
+        customer_order = self.env['sale.order'].search (
                 ['|', ('name', '=', self.origin), ('client_order_ref', '!=', False)], limit=1).customer_order
         return {
             'origin': origin,
