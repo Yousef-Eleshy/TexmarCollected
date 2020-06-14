@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
-from itertools import groupby
+from odoo import models, fields, _
+from odoo.exceptions import UserError
 
 
-class sales_custome (models.Model):
+class SalesCustomer(models.Model):
     _inherit = 'sale.order'
-    customer_order = fields.Char (string="Customer’s order")
+    customer_order = fields.Char(string="Customerâ€™s order")
     '''
     This function to Prepare the dict of values to create the new invoice for a sales order and 
     add new field customer_order_invoice=customer_order
@@ -18,12 +18,12 @@ class sales_custome (models.Model):
         overridden to implement custom invoice generation (making sure to call super() to establish
         a clean extension chain).
         """
-        self.ensure_one ()
-        journal = self.env['account.move'].with_context (force_company=self.company_id.id,
-                                                         default_type='out_invoice')._get_default_journal ()
+        self.ensure_one()
+        journal = self.env['account.move'].with_context(force_company=self.company_id.id,
+                                                        default_type='out_invoice')._get_default_journal()
         if not journal:
-            raise UserError (_ ('Please define an accounting sales journal for the company %s (%s).') % (
-            self.company_id.name, self.company_id.id))
+            raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (
+                self.company_id.name, self.company_id.id))
 
         invoice_vals = {
             'ref': self.client_order_ref or '',
@@ -49,33 +49,36 @@ class sales_custome (models.Model):
         return invoice_vals
 
 
+class DeliveryCustomer(models.Model):
+    _inherit = 'stock.picking'
+    customer_order_delivery = fields.Char(string="Customerâ€™s order")
 
-class delivery_fun (models.Model):
+
+class DeliveryFun(models.Model):
     _inherit = "stock.move"
 
     def _get_new_picking_values(self):
         """ return create values for new picking that will be linked with group
         of moves in self.
         """
-        origins = set (self.filtered (lambda m: m.origin).mapped ('origin'))
-        origin = len (origins) == 1 and origins.pop () or False
-        partners = self.mapped ('partner_id')
-        partner = len (partners) == 1 and partners.id or False
+        origins = set(self.filtered(lambda m: m.origin).mapped('origin'))
+        origin = len(origins) == 1 and origins.pop() or False
+        partners = self.mapped('partner_id')
+        partner = len(partners) == 1 and partners.id or False
         return {
             'origin': origin,
-            'company_id': self.mapped ('company_id').id,
+            'company_id': self.mapped('company_id').id,
             'user_id': False,
-            'move_type': self.mapped ('group_id').move_type or 'direct',
+            'move_type': self.mapped('group_id').move_type or 'direct',
             'partner_id': partner,
-            'picking_type_id': self.mapped ('picking_type_id').id,
-            'location_id': self.mapped ('location_id').id,
-            'location_dest_id': self.mapped ('location_dest_id').id,
-            'customer_order_delivery': self.env['sale.order'].search (
-                ['|', ('name', '=', self.origin), ('client_order_ref', '!=', False)], limit=1).customer_order
+            'picking_type_id': self.mapped('picking_type_id').id,
+            'location_id': self.mapped('location_id').id,
+            'location_dest_id': self.mapped('location_dest_id').id,
+            'customer_order_delivery': self.env['sale.order'].search(
+                ['|', ('name', '=', origin), ('client_order_ref', '!=', False)], limit=1).customer_order
         }
 
 
-class invoice_custome (models.Model):
+class InvoiceCustomer(models.Model):
     _inherit = 'account.move'
-    customer_order_invoice = fields.Char (string="Customer’s order")
-
+    customer_order_invoice = fields.Char(string="Customerâ€™s order")
