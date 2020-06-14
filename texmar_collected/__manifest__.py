@@ -19,7 +19,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'mrp', 'sale_management', 'stock', 'sale', 'product', 'purchase'],
+    'depends': ['base', 'mrp', 'sale_management', 'stock', 'purchase'],
 
     # always loaded
     'data': [
@@ -27,7 +27,6 @@
         'views/views.xml',
         'views/templates.xml',
         'views/size_of_pieces_views.xml',
-        'views/customer_order_views.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
